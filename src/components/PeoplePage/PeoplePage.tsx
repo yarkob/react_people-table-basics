@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
 import cs from 'classnames';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 enum Error {
   NoError = 'No Error',
@@ -15,7 +15,6 @@ const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState<Error>(Error.NoError);
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -25,8 +24,6 @@ const PeoplePage: React.FC = () => {
       .then(data => {
         if (!data.length) {
           setError(Error.NoPeople);
-        } else {
-          setError(Error.NoError);
         }
 
         setPeople(data);
@@ -93,11 +90,6 @@ const PeoplePage: React.FC = () => {
                           'has-text-danger': person.sex === 'f',
                         })}
                         to={`/people/${person.slug}`}
-                        onClick={event => {
-                          event.preventDefault();
-
-                          navigate(`/people/${person.slug}`);
-                        }}
                       >
                         {person.name}
                       </Link>
@@ -112,15 +104,6 @@ const PeoplePage: React.FC = () => {
                           <Link
                             className="has-text-danger"
                             to={`/people/${findPerson(person.motherName)?.slug}`}
-                            onClick={event => {
-                              event.preventDefault();
-
-                              if (person.motherName) {
-                                navigate(
-                                  `/people/${findPerson(person.motherName)?.slug}`,
-                                );
-                              }
-                            }}
                           >
                             {person.motherName}
                           </Link>
@@ -136,15 +119,6 @@ const PeoplePage: React.FC = () => {
                         !!findPerson(person.fatherName) ? (
                           <Link
                             to={`/people/${findPerson(person.fatherName)?.slug}`}
-                            onClick={event => {
-                              event.preventDefault();
-
-                              if (person.fatherName) {
-                                navigate(
-                                  `/people/${findPerson(person.fatherName)?.slug}`,
-                                );
-                              }
-                            }}
                           >
                             {person.fatherName}
                           </Link>
